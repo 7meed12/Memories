@@ -1,25 +1,34 @@
-import React from "react";
+import React , {useState,useEffect} from "react";
 import {Container , AppBar , Typography , Grow , Grid} from "@material-ui/core"
 import memories from "./imgs/memories.png"
 import Form from'./components/Form/Form'
 import Posts from'./components/Posts/Posts'
+import {getPosts} from './actions/posts'
+import {useDispatch} from 'react-redux'
 import useStyles from './styles'
+
+
 const App = () => {
+    const [currentId , setCurrentId] = useState(0);
     const classes = useStyles()
+    const Dispatch = useDispatch()
+    useEffect(() => {
+        Dispatch(getPosts())
+    },[Dispatch])
    return (<Container maxWidth="lg">
         <AppBar position="static" color="inherit" className={classes.appBar}>
-            <Typography classNmae={classes.heading} variant="h2" align="center"> Memories</Typography>
-            <img  classNmae={classes.image} src={memories} alt="memories" height="60px "/>
+            <Typography className={classes.heading} variant="h2" align="center"> Memories</Typography>
+            <img  className={classes.image} src={memories} alt="memories" height="60px "/>
         </AppBar>
         <Grow in>
                 <Container>
-                    <Grid container justify="space-between"
+                    <Grid container justifyContent="space-between"
                     alignItems="stretch" spacing={3}>
                         <Grid item xs={12} sm={7} >
-                            <Posts/>
+                            <Posts setCurrentId={setCurrentId}/>
                         </Grid>
                         <Grid item xs={12} sm={4} >
-                            <Form/>
+                            <Form currentId={currentId} setCurrentId={setCurrentId}/>
                         </Grid>
                     </Grid>
                 </Container>
