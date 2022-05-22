@@ -9,12 +9,13 @@ import useStyles from './styles'
 
 
 const App = () => {
-    const [currentId , setCurrentId] = useState(0);
+    const [currentId, setCurrentId] = useState(0);
+    console.log('currentId',currentId)
     const classes = useStyles()
-    const Dispatch = useDispatch()
+    const Dispatch = useDispatch();
     useEffect(() => {
         Dispatch(getPosts())
-    },[Dispatch])
+    },[currentId,Dispatch])
    return (<Container maxWidth="lg">
         <AppBar position="static" color="inherit" className={classes.appBar}>
             <Typography className={classes.heading} variant="h2" align="center"> Memories</Typography>
@@ -23,7 +24,7 @@ const App = () => {
         <Grow in>
                 <Container>
                     <Grid container justifyContent="space-between"
-                    alignItems="stretch" spacing={3}>
+                    alignItems="stretch" spacing={3} className={classes.mainContainer}>
                         <Grid item xs={12} sm={7} >
                             <Posts setCurrentId={setCurrentId}/>
                         </Grid>

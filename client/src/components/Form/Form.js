@@ -5,9 +5,9 @@ import {useDispatch , useSelector} from 'react-redux'
 import { createPost , updatePost } from "../../actions/posts";
 import useStyles from "./styles";
 
-const Form = ({currentId,serCurrentId}) => {
+const Form = ({currentId,setCurrentId}) => {
   const classes = useStyles();
-  const post = useSelector((state) => (currentId ? state.posts.find((message) => message._id === currentId) : null));
+  const post = useSelector((state) => (currentId ? state.posts.find(p => p._id === currentId) : 0)); 
   const [postData, setPostData ] = useState({
     creator: "",
     title: "",
@@ -20,16 +20,30 @@ const Form = ({currentId,serCurrentId}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(currentId)
     if(currentId){
-      dispatch(updatePost(currentId,postData))
-    }else dispatch(createPost(postData));};
+      dispatch(updatePost(currentId,postData));}
+      else dispatch(createPost(postData));
+
+    clear();
+  }
+       
+    
 
   useEffect(() => {
-    if (post) setPostData(post);
+    if (post) {setPostData(post);
+    console.log(post)}
   }, [post]);
 
 
-  const clear = () => {};
+  const clear = () => {
+    setCurrentId (null);
+    setPostData( { creator: "",
+    title: "",
+    message: "",
+    tags:"",
+    selectedFile: "",})
+  };
   return (
     <Paper className={classes.paper}>
       <form
@@ -38,7 +52,7 @@ const Form = ({currentId,serCurrentId}) => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6"> Creating A Memory</Typography>
+        <Typography variant="h6"> {currentId ? 'Editing' : 'Creating'} A Memory</Typography>
         <TextField
           name="creator"
           variant="outlined"
@@ -76,7 +90,7 @@ const Form = ({currentId,serCurrentId}) => {
           fullWidth
           value={postData.tags}
           onChange={(e) =>
-            setPostData({ ...postData, tags: e.target.value })
+            setPostData({ ...postData, tags: e.target.value.split(',') })
           }
         ></TextField>
         <div className={classes.fileInput}>
